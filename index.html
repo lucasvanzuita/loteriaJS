@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loteria</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="icon" href="imagem/icontrevo.png"/>
+    <style>
+        body{
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.4));
+        font-family: 'PT Sans', sans-serif;
+        background-image: url(imagem/trevos.jpg);
+        background-attachment: fixed;
+        background-size: cover;
+        background-repeat: no-repeat;
+        position: absolute;
+        top: 255;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.9;
+        }
+    </style>           
+</head>
+<body>
+    <div class=" text-center">
+        <header>
+            <h1>Desafio da Loteria</h1>
+        </header>
+    </div>
+    <div class="text-center">
+        <h5>Hoje é seu dia de sorte?</h5>
+        <h3></h3>
+    </div>
+    <div class="col-sm-5 container clearfix jumbotron text-center">
+        <main>
+            <div class="container ">
+                <div class="col-sm-5 container text-center">
+                    <p>
+                        <label for="inNumInfo"><b>Tente a sorte!</b></label>
+                        <input type="text" id="idNumInfo" autofocus placeholder="Números de 1 a 60" size="20" class="form-control"><br>
+                        <button class="btn btn-primary" id="idValidar">Armazenar Número</button><br>
+                        <output id="outNumInfo"><b></b></output>
+                    </p>
+                </div>       
+                <p>
+                    <label for="idExibir2"><b>Clique em "Executar" para descobrir se ganhou!</b></label><br>
+                    <button class="btn btn-primary" id="idExecutar"><b>Executar</b></button><br>
+                    <output class="p-3 mb-2 bg-success text-white" id="idSaidaVitoria" name="nmOut" hidden></output>
+                </p>    
+            </div>
+        </main>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script>
+        //Declarando variável global de sorteio e capturar numero
+        var sorteio = []
+        var aposta  = []
+
+        //Executando a validação de números informados pelo usuario
+        document.getElementById("idValidar").onclick = function (){
+            
+            //Capturando o número informado pelo usuario
+            if (aposta.length < 15){
+                let num = Number(document.getElementById("idNumInfo").value);
+                if(num <= 0 || num > 60){
+                    alert("Número inválido")
+                }else{
+                    //Verificando se usúario não vai repetir número    
+                    if((aposta[0]   != num) &&
+                       (aposta[1]  != num) &&
+                       (aposta[2]  != num) &&
+                       (aposta[3]  != num) &&
+                       (aposta[4]  != num) &&
+                       (aposta[5]  != num) &&
+                       (aposta[6]  != num) &&
+                       (aposta[7]  != num) &&
+                       (aposta[8]  != num) &&
+                       (aposta[9]  != num) &&
+                       (aposta[10] != num) &&
+                       (aposta[11] != num) &&
+                       (aposta[12] != num) &&
+                       (aposta[13] != num) &&
+                       (aposta[14] != num) &&
+                       (aposta[15] != num)
+                        ){
+                            aposta.push(num);
+                        }else {
+                            alert("número reptido!")
+                        }
+                    }
+            }else{
+                alert(`Limite ja atingido!`)    
+        }
+        //Imprimindo os números selecionados pelo usúario
+        document.getElementById("outNumInfo").value = aposta.join("-");
+    }   
+        //Executando a contagem de números até que sai um resultado
+    document.getElementById("idExecutar").onclick = function () {
+            //Declarando uma let para calcular o tempo
+            let dataEntrada = new Date()
+            //Só vai rodar quando o usúario armazenas no mínimo 6 números
+            if (aposta.length < 6) {
+                alert("No mínimo 6 números e no máximo 15.")
+            } else {
+            let dataSaida;
+
+            //Determinando quantas vezes séra necessário rodar o while
+            let contador = 0
+            let entrou = true
+            let jogadas = true
+
+            // Sorteandos 6 número aleatórios
+            while (sorteio.length < 6) {
+                let aleatorio = Math.floor((Math.random() * 60) + 1)
+                if (sorteio.indexOf(aleatorio) == -1) {
+                    sorteio.push(aleatorio)
+                }
+            } 
+            //Iniciando o laço para testar a sorte
+            while (jogadas == true) {
+                //Caso os números não batam ele adiciona mais 6 números e compara novamente
+                while (entrou == true) {
+                    for (let index = 0; index < sorteio.length; index++) {
+                        sorteio[index] = Math.floor((Math.random() * 60) + 1)
+                    }
+                    entrou = false
+                }
+                //Iniciando comparação pra ver se os números sorteados são iguais ao do usúario
+                for (let index = 0; index < aposta.length; index++) {
+                        for (let j = 0; j < aposta.length; j++) {
+                            if (aposta[index] == aposta[j]) {
+                                contador++;
+                            }
+                        }         
+                }
+                //Se todos batem, o laço para e o tempoSaida determina o fim
+                //Iniciando a comparação dos numeros aleatorios com os numeros solicitados pelo usuario
+                if (aposta[1] == sorteio[1] || aposta[2] == sorteio[1] || aposta[3] == sorteio[1] || aposta[4] == sorteio[1] || aposta[5] == sorteio[1] || aposta[6] == sorteio[1] || aposta[7] == sorteio[1] || aposta[8] == sorteio[1] || aposta[9] == sorteio[1] || aposta[10] == sorteio[1] || aposta[11] == sorteio[1] || aposta[12] == sorteio[1] || aposta[13] == sorteio[1] || aposta[14] == sorteio[1] || aposta[15] == sorteio[1]) {
+                    if (aposta[1] == sorteio[2] || aposta[2] == sorteio[2] || aposta[3] == sorteio[2] || aposta[4] == sorteio[2] || aposta[5] == sorteio[2] || aposta[6] == sorteio[2] || aposta[7] == sorteio[2] || aposta[8] == sorteio[2] || aposta[9] == sorteio[2] || aposta[10] == sorteio[2] || aposta[11] == sorteio[2] || aposta[12] == sorteio[2] || aposta[13] == sorteio[2] || aposta[14] == sorteio[2] || aposta[15] == sorteio[2]) {
+                        if (aposta[1] == sorteio[3] || aposta[2] == sorteio[3] || aposta[3] == sorteio[3] || aposta[4] == sorteio[3] || aposta[5] == sorteio[3] || aposta[6] == sorteio[3] || aposta[7] == sorteio[3] || aposta[8] == sorteio[3] || aposta[9] == sorteio[3] || aposta[10] == sorteio[3] || aposta[11] == sorteio[3] || aposta[12] == sorteio[3] || aposta[13] == sorteio[3] || aposta[14] == sorteio[3] || aposta[15] == sorteio[3]) {
+                            if (aposta[1] == sorteio[4] || aposta[2] == sorteio[4] || aposta[3] == sorteio[4] || aposta[4] == sorteio[4] || aposta[5] == sorteio[4] || aposta[6] == sorteio[4] || aposta[7] == sorteio[4] || aposta[8] == sorteio[4] || aposta[9] == sorteio[4] || aposta[10] == sorteio[4] || aposta[11] == sorteio[4] || aposta[12] == sorteio[4] || aposta[13] == sorteio[4] || aposta[14] == sorteio[4] || aposta[15] == sorteio[4]) {
+                                if (aposta[1] == sorteio[5] || aposta[2] == sorteio[5] || aposta[3] == sorteio[5] || aposta[4] == sorteio[5] || aposta[5] == sorteio[5] || aposta[6] == sorteio[5] || aposta[7] == sorteio[5] || aposta[8] == sorteio[5] || aposta[9] == sorteio[5] || aposta[10] == sorteio[5] || aposta[11] == sorteio[5] || aposta[12] == sorteio[5] || aposta[13] == sorteio[5] || aposta[14] == sorteio[5] || aposta[15] == sorteio[5]) {
+                                    if (aposta[1] == sorteio[6] || aposta[2] == sorteio[6] || aposta[3] == sorteio[6] || aposta[4] == sorteio[6] || aposta[5] == sorteio[6] || aposta[6] == sorteio[6] || aposta[7] == sorteio[6] || aposta[8] == sorteio[6] || aposta[9] == sorteio[6] || aposta[10] == sorteio[6] || aposta[11] == sorteio[6] || aposta[12] == sorteio[6] || aposta[13] == sorteio[6] || aposta[14] == sorteio[6] || aposta[15] == sorteio[6]) {
+                                        //Se todos batem, o laço para e o tempoSaida determina o fim da operação.
+                                        jogadas = false
+                                        dataSaida = new Date()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                //Se os números não baterem o while volta a gerar números aleatórios
+                entrou = true   
+            }
+            //Convertendo o tempo para segundos
+            let tempo = (dataSaida - dataEntrada) / 1000
+            //Comparando quantas vezes o o programa rodou
+            if (contador == 1) {   
+            }
+            document.getElementById("idSaidaVitoria").hidden = false
+            document.getElementById("idSaidaVitoria").value = `Você ganhou com ${contador} tentativas. O programa levou ${tempo.toFixed(2)} segundos.`
+        }   
+    }
+    </script>
+</body>
+</html>
